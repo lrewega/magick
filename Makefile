@@ -33,10 +33,26 @@ hst.png: c/hst-sm4.jpeg
 		$@
 
 all:: hst-favicon.ico
+
 hst-favicon.ico: hst.png
 	$(CONVERT) $< \
 		-background none -gravity center -resize 64x64 -extent 64x64 \
 		-define icon:auto-resize=64,48,32,16 \
+		$@
+
+all:: hst-spinner.gif
+
+hst-spinner.gif: hst.png
+	$(CONVERT) \
+		-alpha set -background none \
+		-delay 5 \
+		-gravity center \
+		-dispose previous \
+		$< -resize 34x34 \
+		-extent 48x48 +repage \
+		-duplicate 23 -distort ScaleRotateTranslate %[fx:t*360/n] \
+		-trim -layers TrimBounds \
+		-loop 0 \
 		$@
 
 c/%:
@@ -47,7 +63,9 @@ c/%:
 clean-cache:
 	$(RM) -r c/
 
-clean: clean-cache
-	$(RM) *.png *.ico
+clean:
+	$(RM) *.png *.ico *.gif
 
-.PHONY: all clean clean-cache
+distclean: clean clean-cache
+
+.PHONY: all clean clean-cache distclean
