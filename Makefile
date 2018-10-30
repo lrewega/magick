@@ -43,6 +43,15 @@ hst-favicon.ico: hst.png
 all:: hst-spinner.gif
 
 hst-spinner.gif: hst.png
+
+c/hotdog.png: url=https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/155/hot-dog_1f32d.png
+
+all:: spindog.gif
+
+spindog.gif: c/hotdog.png
+
+# Magically make spinning gifs from any image.
+%.gif:
 	$(CONVERT) \
 		-alpha set -background none \
 		-delay 5 \
@@ -55,6 +64,7 @@ hst-spinner.gif: hst.png
 		-loop 0 \
 		$@
 
+# Download and cache inputs using the url variable.
 c/%:
 	@mkdir -p c/
 	$(CURL) -o $@ $(url)
